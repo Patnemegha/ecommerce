@@ -1,0 +1,36 @@
+2.0.9 comoser
+7.4.11 xampp
+8.0 laravel
+************************
+http://image.intervention.io/getting_started/installation
+(package for image)
+In command line past
+1)composer require intervention/image
+
+GO to config/app.php and add the
+1)inside provider array 
+=>Intervention\Image\ImageServiceProvider::class,
+2)inside aliases array 
+=>'Image' => Intervention\Image\Facades\Image::class,
+
+(Publish configuration in Laravel)
+In command line past
+1)php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravelRecent"
+
+
+Note:- If in product add hindi text gives error update the file editor.js
+
+
+
+***************************
+need to do
+1)insert created_at and updatd_at dates in all tables
+2)In sub->sub categor ->edit-> on the based of select category sub category should comes right now its not happening.
+3)validation for sub category and categoy andforforigen key validation, if subcategory present we can not delete category 
+also add for products and check into project.
+
+
+
+
+
+
