@@ -53,9 +53,9 @@ class CategoryController extends Controller
     }
 
 
-    public function CategoryUpdate(Request $request ,$id){
+    public function CategoryUpdate(Request $request,$id){
 
-    	 
+    	
 
       Category::findOrFail($id)->update([
 		'category_name_en' => $request->category_name_en,
@@ -89,4 +89,7 @@ class CategoryController extends Controller
 		return redirect()->back()->with($notification);
 
     } // end method 
+
+
 }
+ 
