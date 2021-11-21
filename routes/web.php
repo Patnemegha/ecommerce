@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\SliderController;
 
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\LanguageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +32,8 @@ Route::group(['prefix'=> 'admin', 'middleware'=>['admin:admin']], function(){
 
 
 Route::middleware(['auth:admin'])->group(function(){
+
+
 
 Route::middleware(['auth:sanctum,admin', 'verified'])->get('/admin/dashboard', function () {
     return view('admin.index');
@@ -137,8 +140,10 @@ Route::get('/sub/sub/delete/{id}', [SubCategoryController::class, 'SubSubCategor
 Route::prefix('product')->group(function(){
 
 Route::get('/add', [ProductController::class, 'AddProduct'])->name('add-product');
+
 Route::post('/store', [ProductController::class, 'StoreProduct'])->name('product-store');
 Route::get('/manage', [ProductController::class, 'ManageProduct'])->name('manage-product');
+
 Route::get('/edit/{id}', [ProductController::class, 'EditProduct'])->name('product.edit');
 
 Route::post('/data/update', [ProductController::class, 'ProductDataUpdate'])->name('product-update');
@@ -176,7 +181,10 @@ Route::get('/inactive/{id}', [SliderController::class, 'SliderInactive'])->name(
 
 Route::get('/active/{id}', [SliderController::class, 'SliderActive'])->name('slider.active');
 
-}); 
+});
+
+
+
 //// Frontend All Routes /////
 /// Multi Language All Routes ////
 
@@ -184,5 +192,16 @@ Route::get('/language/hindi', [LanguageController::class, 'Hindi'])->name('hindi
 
 Route::get('/language/english', [LanguageController::class, 'English'])->name('english.language');
 
+
 // Frontend Product Details Page url 
 Route::get('/product/details/{id}/{slug}', [IndexController::class, 'ProductDetails']);
+
+
+// Frontend Product Tags Page 
+Route::get('/product/tag/{tag}', [IndexController::class, 'TagWiseProduct']);
+
+// Frontend SubCategory wise Data
+Route::get('/subcategory/product/{subcat_id}/{slug}', [IndexController::class, 'SubCatWiseProduct']);
+
+// Frontend Sub-SubCategory wise Data
+Route::get('/subsubcategory/product/{subsubcat_id}/{slug}', [IndexController::class, 'SubSubCatWiseProduct']);
