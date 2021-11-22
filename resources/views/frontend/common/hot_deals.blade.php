@@ -1,4 +1,4 @@
-     @php
+@php
 
 $hot_deals = App\Models\Product::where('hot_deals',1)->where('discount_price','!=',NULL)->orderBy('id','DESC')->limit(3)->get();
      @endphp
