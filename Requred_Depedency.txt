@@ -20,9 +20,14 @@ In command line past
 
 Note:- If in product add hindi text gives error update the file editor.js
 
+*************************************************************************
+Laravel shopping card package(https://packagist.org/packages/bumbummen99/shoppingcart)(section20-lecture 219)
+steps=>
+(in command line):-
+composer require bumbummen99/shoppingcart
+php artisan vendor:publish --provider="Gloudemans\Shoppingcart\ShoppingcartServiceProvider" --tag="config"
 
-
-***************************
+*************************************************************************
 need to do
 1)insert created_at and updatd_at dates in all tables
 2)In sub->sub categor ->edit-> on the based of select category sub category should comes right now its not happening.
