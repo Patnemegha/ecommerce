@@ -28,6 +28,18 @@ composer require bumbummen99/shoppingcart
 php artisan vendor:publish --provider="Gloudemans\Shoppingcart\ShoppingcartServiceProvider" --tag="config"
 
 *************************************************************************
+add payment gatway strip
+1)https://stripe.com/docs/development/quickstart#api-library
+go to command line=>
+a)composer require stripe/stripe-php
+
+
+nate important links payments gatway
+--:https://stripe.com/docs/payments/accept-a-payment-charges :--
+--:https://dashboard.stripe.com/test/dashboard:--
+publisher key
+'pk_test_51JzEvFSDYPomvLxgEoK8EgRFTnDLQJWZKOtDRuVX1K1rSSJdNgpMzgcQY6OVdzMrOHiaqLZJq2hZPBrCYhvcA0SX00cdqxOWse
+*************************************************************************
 need to do
 1)insert created_at and updatd_at dates in all tables
 2)In sub->sub categor ->edit-> on the based of select category sub category should comes right now its not happening.
@@ -35,7 +47,8 @@ need to do
 also add for products and check into project.
 4)Add BD::transacrtion commit rollback for add product and try catch bz in there adding product in multiple tables.
 
-
+5)When do payment add validation when paymnt success then save data into database table order and orderitem and add validation for this of 
+db trascaction commit and rollback and try catch.
 
 
 
