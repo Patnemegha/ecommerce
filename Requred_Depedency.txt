@@ -39,6 +39,18 @@ nate important links payments gatway
 --:https://dashboard.stripe.com/test/dashboard:--
 publisher key
 'pk_test_51JzEvFSDYPomvLxgEoK8EgRFTnDLQJWZKOtDRuVX1K1rSSJdNgpMzgcQY6OVdzMrOHiaqLZJq2hZPBrCYhvcA0SX00cdqxOWse
+
+**********************************************************************
+PDF FOR INVOICE (https://github.com/barryvdh/laravel-dompdf)
+1)cmd--composer require barryvdh/laravel-dompdf
+
+After updating composer, add the ServiceProvider to the providers array in config/app.php
+
+2)Barryvdh\DomPDF\ServiceProvider::class,
+
+You can optionally use the facade for shorter code. Add this to your facades:aliases
+
+3) 'PDF' => Barryvdh\DomPDF\Facade::class,
 *************************************************************************
 need to do
 1)insert created_at and updatd_at dates in all tables
