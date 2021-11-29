@@ -6,9 +6,6 @@
       <div class="header-top-inner">
         <div class="cnt-account">
           <ul class="list-unstyled">
-            <li><a href="#"><i class="icon fa fa-user"></i>
-@if(session()->get('language') == 'hindi') मेरी प्रोफाइल @else My Account @endif
-            </a></li>
             <li><a href="{{ route('wishlist') }}"><i class="icon fa fa-heart"></i>Wishlist</a></li>
             <li><a href="{{ route('mycart') }}"><i class="icon fa fa-shopping-cart"></i>My Cart</a></li>
             <li><a href="{{ route('checkout') }}"><i class="icon fa fa-check"></i>Checkout</a></li>
@@ -30,13 +27,7 @@
         
         <div class="cnt-block">
           <ul class="list-unstyled list-inline">
-            <li class="dropdown dropdown-small"> <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown"><span class="value">USD </span><b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">USD</a></li>
-                <li><a href="#">INR</a></li>
-                <li><a href="#">GBP</a></li>
-              </ul>
-            </li>
+          
  <li class="dropdown dropdown-small"> <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown"><span class="value">
 @if(session()->get('language') == 'hindi') भाषा: हिन्दी @else Language @endif
   </span><b class="caret"></b></a>
@@ -79,11 +70,22 @@
                 <ul class="categories-filter animate-dropdown">
                   <li class="dropdown"> <a class="dropdown-toggle"  data-toggle="dropdown" href="category.html">Categories <b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu" >
-                      <li class="menu-header">Computer</li>
-                      <li role="presentation"><a role="menuitem" tabindex="-1" href="category.html">- Clothing</a></li>
-                      <li role="presentation"><a role="menuitem" tabindex="-1" href="category.html">- Electronics</a></li>
-                      <li role="presentation"><a role="menuitem" tabindex="-1" href="category.html">- Shoes</a></li>
-                      <li role="presentation"><a role="menuitem" tabindex="-1" href="category.html">- Watches</a></li>
+                    @php
+                      $categories = App\Models\Category::orderBy('category_name_en','ASC')->get();
+                    @endphp
+
+                    @foreach($categories as $category)  
+                    <li class="menu-header">
+                           {{$category->category_name_en}}  
+                           @php
+                        $subcategories = App\Models\SubCategory::where('category_id',$category->id)->orderBy('subcategory_name_en','ASC')->get();
+                      @endphp
+                      @foreach($subcategories as $subcategory)
+                      <li role="presentation"><a role="menuitem" tabindex="-1" href="category.html">- {{ $subcategory->subcategory_name_en }}</a></li>
+                      @endforeach
+                      </li>
+                      @endforeach
+                     
                     </ul>
                   </li>
                 </ul>
@@ -121,12 +123,15 @@
 
 
                 <div class="clearfix cart-total">
+                  
                   <div class="pull-right"> <span class="text">Sub Total :</span>
                     <span class='price'  id="cartSubTotal">  </span> </div>
                   <div class="clearfix"></div>
-                  <a href="checkout.html" class="btn btn-upper btn-primary btn-block m-t-20">Checkout</a> </div>
-                <!-- /.cart-total--> 
-                
+
+                  
+                  <a href="{{ route('mycart') }}" type="submit" class="btn btn-primary checkout-btn"> CHEKOUT</a>
+                  <!-- /.cart-total--> 
+               
               </li>
             </ul>
             <!-- /.dropdown-menu--> 

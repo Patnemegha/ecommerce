@@ -47,7 +47,7 @@
 
 <!-- create a new account -->
 <div class="col-md-6 col-sm-6 create-new-account">
-	<h4 class="checkout-subtitle">Create a new account</h4>
+	<h4 class="-subtitle">Create a new account</h4>
 	<p class="text title-tag-line">Create your new account.</p>
     <form method="POST" action="{{ route('register') }}">
             @csrf
