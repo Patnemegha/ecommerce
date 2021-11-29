@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\SliderController;
 use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\ShippingAreaController;
 use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\LanguageController;
 use App\Http\Controllers\Frontend\CartController;
@@ -256,6 +257,7 @@ Route::post('/return/order/{order_id}', [AllUserController::class, 'ReturnOrder'
 
 Route::get('/return/order/list', [AllUserController::class, 'ReturnOrderList'])->name('return.order.list');
 
+Route::get('/cancel/orders', [AllUserController::class, 'CancelOrders'])->name('cancel.orders');
 
 });
 
@@ -372,6 +374,8 @@ Route::prefix('orders')->group(function(){
     
     Route::get('/cancel/orders', [OrderController::class, 'CancelOrders'])->name('cancel-orders');
 
+    Route::get('/return/orders', [OrderController::class, 'ReturnOrders'])->name('return-orders');
+
         // Update Status 
     Route::get('/pending/confirm/{order_id}', [OrderController::class, 'PendingToConfirm'])->name('pending-confirm');
 
@@ -383,8 +387,31 @@ Route::prefix('orders')->group(function(){
 
     Route::get('/shipped/delivered/{order_id}', [OrderController::class, 'ShippedToDelivered'])->name('shipped.delivered');
 
+    Route::get('/return/pending/confirm/{order_id}', [OrderController::class, 'ReturnPendingToConfirm'])->name('return-pending-confirm');
+
     Route::get('/invoice/download/{order_id}', [OrderController::class, 'AdminInvoiceDownload'])->name('invoice.download');
 
     
+    
+    });
+
+    // Admin Reports Routes 
+    Route::prefix('reports')->group(function(){
+
+    Route::get('/view', [ReportController::class, 'ReportView'])->name('all-reports');
+    
+    Route::post('/search/by/date', [ReportController::class, 'ReportByDate'])->name('search-by-date');
+    
+    Route::post('/search/by/month', [ReportController::class, 'ReportByMonth'])->name('search-by-month');
+    
+    Route::post('/search/by/year', [ReportController::class, 'ReportByYear'])->name('search-by-year');
+    
+    });
+
+    // Admin Get All User Routes 
+Route::prefix('alluser')->group(function(){
+
+    Route::get('/view', [AdminProfileController::class, 'AllUsers'])->name('all-users');
+     
     
     });

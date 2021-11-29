@@ -72,10 +72,8 @@
                  <td class="col-md-2">
                   <label for=""> 
 
-   @if($order->return_order == 0) 
- <span class="badge badge-pill badge-warning" style="background: #418DB9;"> No Return Request </span>
- @elseif($order->return_order == 1)
- <span class="badge badge-pill badge-warning" style="background: #800000;"> Pedding </span>
+ @if($order->return_order == 1)
+ <span class="badge badge-pill badge-warning" style="background: #800000;"> Pending </span>
  <span class="badge badge-pill badge-warning" style="background:red;">Return Requested </span>
 
  @elseif($order->return_order == 2)

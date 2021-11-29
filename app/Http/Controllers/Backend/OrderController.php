@@ -87,6 +87,15 @@ class OrderController extends Controller
 	} // end mehtod 
 
 
+	// Return Orders 
+	public function ReturnOrders(){
+		$orders = Order::where('return_reason','!=',Null)->orderBy('id','DESC')->get();
+		
+		return view('backend.orders.return_orders',compact('orders'));
+
+	} // end mehtod 
+				
+	
 
 
 	public function PendingToConfirm($order_id){
@@ -103,8 +112,20 @@ class OrderController extends Controller
 
 	} // end method
 
-
-
+	public function ReturnPendingToConfirm($order_id){
+   
+		Order::findOrFail($order_id)->update(['return_order' => 2]);
+  
+		$notification = array(
+			  'message' => 'Order Confirm Successfully',
+			  'alert-type' => 'success'
+		  );
+  
+		  return redirect()->back()->with($notification);
+  
+  
+	  } // end method
+	
 
 
 	public function ConfirmToProcessing($order_id){
