@@ -73,7 +73,11 @@
          <td class="col-md-1">
           <a href="{{ url('user/order_details/'.$order->id ) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i> View</a>
 
-          <a target="_blank" href="{{ url('user/invoice_download/'.$order->id ) }}" class="btn btn-sm btn-danger" style="margin-top: 5px;"><i class="fa fa-download" style="color: white;"></i> Invoice </a>        </td>
+          <a target="_blank" href="{{ url('user/invoice_download/'.$order->id ) }}" class="btn btn-sm btn-danger" style="margin-top: 5px;"><i class="fa fa-download" style="color: white;"></i> Invoice </a>     
+               @if($order->status != "delivered")         
+                 <a href="{{ url('user/order_cancel/'.$order->id ) }}" class="btn btn-sm btn-primary" style="margin-top: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Cancel</a>
+               @endif
+        </td>
                 
               </tr>
               @endforeach

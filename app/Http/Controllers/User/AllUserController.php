@@ -74,7 +74,22 @@ class AllUserController extends Controller
 
     } // end method 
 
+    
+    public function CancelOrder($order_id){
+        
+          Order::findOrFail($order_id)->update([
+            'cancel_date' => Carbon::now()->format('d F Y'),
+            'status' => "cancel",
+           
+        ]);
+        $notification = array(
+            'message' => 'Cancel Order Successfully',
+            'alert-type' => 'success'
+        );
 
+        return redirect()->route('my.orders')->with($notification);
+
+    } // end method 
 
     public function CancelOrders(){
 
