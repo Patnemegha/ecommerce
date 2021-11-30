@@ -23,6 +23,7 @@ use App\Http\Controllers\User\CartPageController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\StripeController;
 use App\Http\Controllers\User\CashController;
+use App\Http\Controllers\User\RazorpayController;
 
 use App\Http\Controllers\User\AllUserController;
 /*
@@ -364,6 +365,9 @@ Route::get('/wishlist-remove/{id}', [WishlistController::class, 'RemoveWishlistP
 Route::post('/stripe/order', [StripeController::class, 'StripeOrder'])->name('stripe.order');
 
 Route::post('/cash/order', [CashController::class, 'CashOrder'])->name('cash.order');
+
+Route::post('/razorpay/order', [RazorpayController::class, 'RazorpayOrder'])->name('razorpay.order');
+
 
 Route::get('/my/orders', [AllUserController::class, 'MyOrders'])->name('my.orders');
 

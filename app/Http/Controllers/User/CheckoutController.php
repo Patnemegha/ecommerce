@@ -29,7 +29,7 @@ class CheckoutController extends Controller
 
 
     public function CheckoutStore(Request $request){
-    	// dd($request->all());
+    	
     	$data = array();
     	$data['shipping_name'] = $request->shipping_name;
     	$data['shipping_email'] = $request->shipping_email;
@@ -46,6 +46,8 @@ class CheckoutController extends Controller
     		return view('frontend.payment.stripe',compact('data','cartTotal'));
     	}elseif ($request->payment_method == 'card') {
     		return 'card';
+		}elseif ($request->payment_method == 'razorpay') {
+			return view('frontend.payment.razorpay',compact('data','cartTotal'));
     	}else{
             return view('frontend.payment.cash',compact('data','cartTotal'));
     	}

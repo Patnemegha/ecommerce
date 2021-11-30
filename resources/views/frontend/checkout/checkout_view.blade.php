@@ -260,7 +260,11 @@ My Checkout
 		  <img src="{{ asset('frontend/assets/images/payments/6.png') }}">  		
 		    	</div> <!-- end col md 4 -->
 
-				 	
+				<div class="col-md-4">
+		    		<label for="">Razorpay</label> 		
+       <input type="radio" name="payment_method" value="razorpay">	
+		  <img src="{{ asset('frontend/assets/images/payments/6.png') }}">  		
+		    	</div> <!-- end col md 4 -->	
 			</div> <!-- // end row  -->
 <hr>
   <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Payment Step</button>

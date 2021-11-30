@@ -51,6 +51,13 @@ After updating composer, add the ServiceProvider to the providers array in confi
 You can optionally use the facade for shorter code. Add this to your facades:aliases
 
 3) 'PDF' => Barryvdh\DomPDF\Facade::class,
+
+*************************************************************************
+Razorpay install
+1) In command line=>composer require razorpay/razorpay:2.*
+
+(https://razorpay.com/docs/ -> scroll down go to web integratioon->https://razorpay.com/docs/payment-gateway/web-integration/standard/
+->scroll down->copy code)
 *************************************************************************
 need to do
 1)insert created_at and updatd_at dates in all tables
