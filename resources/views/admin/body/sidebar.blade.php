@@ -202,41 +202,8 @@
         </li>  
           </ul>
         </li>         
-        <li class="treeview">
-          <a href="#">
-            <i data-feather="grid"></i>
-            <span>Components</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-right pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="components_alerts.html"><i class="ti-more"></i>Alerts</a></li>
-            <li><a href="components_badges.html"><i class="ti-more"></i>Badge</a></li>
-      <li><a href="components_buttons.html"><i class="ti-more"></i>Buttons</a></li>
-            
-          </ul>
-        </li>
-		
-		<li class="treeview">
-          <a href="#">
-            <i data-feather="credit-card"></i>
-            <span>Cards</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-right pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-			<li><a href="card_advanced.html"><i class="ti-more"></i>Advanced Cards</a></li>
-			<li><a href="card_basic.html"><i class="ti-more"></i>Basic Cards</a></li>
-			<li><a href="card_color.html"><i class="ti-more"></i>Cards Color</a></li>
-		  </ul>
-        </li>  
-		  
-        		  
-		  
+     
 		 
-        
       </ul>
     </section>
 	
