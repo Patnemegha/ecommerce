@@ -12,19 +12,28 @@ use App\Models\Product;
 use App\Models\MultiImg;
 use Carbon\Carbon;
 use Image;
+use DB;
 
 class ProductController extends Controller
 {
     public function AddProduct(){
+		try {
 		$categories = Category::latest()->get();
 		$brands = Brand::latest()->get();
 		return view('backend.product.product_add',compact('categories','brands'));
+	    }catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
 
 	}
 
 
 	public function StoreProduct(Request $request){
 
+		DB::beginTransaction();
+            try {
 		$image = $request->file('product_thambnail');
     	$name_gen = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
     	Image::make($image)->resize(917,1000)->save('upload/products/thambnail/'.$name_gen);
@@ -84,17 +93,25 @@ class ProductController extends Controller
 
     	]);
 
-      }
+		  ////////// Een Multiple Image Upload Start ///////////
+		  DB::commit();
 
-      ////////// Een Multiple Image Upload Start ///////////
-
-
-       $notification = array(
+		  $notification = array(
 			'message' => 'Product Inserted Successfully',
 			'alert-type' => 'success'
 		);
 
 		return redirect()->back()->with($notification);
+      }
+	  }catch (Exception $e) {
+		DB::rollback();
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	}
+
+	
+    
 
 
 
@@ -103,14 +120,19 @@ class ProductController extends Controller
 
 
 	public function ManageProduct(){
-
+    try{
 		$products = Product::latest()->get();
 		return view('backend.product.product_view',compact('products'));
+	 }catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+	return redirect()->back();
+	    }
 	}
 
 
 	public function EditProduct($id){
-
+    try{
 		$multiImgs = MultiImg::where('product_id',$id)->get();
 
 		$categories = Category::latest()->get();
@@ -119,12 +141,16 @@ class ProductController extends Controller
 		$subsubcategory = SubSubCategory::latest()->get();
 		$products = Product::findOrFail($id);
 		return view('backend.product.product_edit',compact('categories','brands','subcategory','subsubcategory','products','multiImgs'));
-
+	 }catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
 	}
 
 
 	public function ProductDataUpdate(Request $request){
-
+       try{
 		$product_id = $request->id;
 
          Product::findOrFail($product_id)->update([
@@ -168,13 +194,18 @@ class ProductController extends Controller
 		);
 
 		return redirect()->route('manage-product')->with($notification);
-
+	   }catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
 
 	} // end method 
 
 
 /// Multiple Image Update
 	public function MultiImageUpdate(Request $request){
+		try{
 		$imgs = $request->multi_img;
 
 		foreach ($imgs as $id => $img) {
@@ -199,12 +230,17 @@ class ProductController extends Controller
 		);
 
 		return redirect()->back()->with($notification);
-
+	    }catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
 	} // end mehtod 
 
 
  /// Product Main Thambnail Update /// 
  public function ThambnailImageUpdate(Request $request){
+	 try{
  	$pro_id = $request->id;
  	$oldImage = $request->old_img;
  	unlink($oldImage);
@@ -226,12 +262,17 @@ class ProductController extends Controller
 		);
 
 		return redirect()->back()->with($notification);
-
+	 }catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
      } // end method
 
 
  //// Multi Image Delete ////
-     public function MultiImageDelete($id){
+    public function MultiImageDelete($id){
+	try{
      	$oldimg = MultiImg::findOrFail($id);
      	unlink($oldimg->photo_name);
      	MultiImg::findOrFail($id)->delete();
@@ -242,12 +283,17 @@ class ProductController extends Controller
 		);
 
 		return redirect()->back()->with($notification);
-
+	}catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
      } // end method 
 
 
 
      public function ProductInactive($id){
+		 try{
      	Product::findOrFail($id)->update(['status' => 0]);
      	$notification = array(
 			'message' => 'Product Inactive',
@@ -255,10 +301,16 @@ class ProductController extends Controller
 		);
 
 		return redirect()->back()->with($notification);
+	}catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
      }
 
 
   public function ProductActive($id){
+	try{
   	Product::findOrFail($id)->update(['status' => 1]);
      	$notification = array(
 			'message' => 'Product Active',
@@ -266,12 +318,20 @@ class ProductController extends Controller
 		);
 
 		return redirect()->back()->with($notification);
+	}catch (Exception $e) {
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	    }
      	
      }
 
 
 
      public function ProductDelete($id){
+
+		DB::beginTransaction();
+		try {
      	$product = Product::findOrFail($id);
      	unlink($product->product_thambnail);
      	Product::findOrFail($id)->delete();
@@ -281,13 +341,20 @@ class ProductController extends Controller
      		unlink($img->photo_name);
      		MultiImg::where('product_id',$id)->delete();
      	}
-
-     	$notification = array(
+		 DB::commit();
+		 $notification = array(
 			'message' => 'Product Deleted Successfully',
 			'alert-type' => 'success'
 		);
 
 		return redirect()->back()->with($notification);
+		}catch (Exception $e) {
+			DB::rollback();
+			return  $e->getMessage();
+			Session::put('error',$e->getMessage());
+			return redirect()->back();
+		}
+     	
 
      }// end method 
 
@@ -295,9 +362,14 @@ class ProductController extends Controller
 
   // product Stock 
 public function ProductStock(){
-
+try{
     $products = Product::latest()->get();
     return view('backend.product.product_stock',compact('products'));
+}catch (Exception $e) {
+	return  $e->getMessage();
+	Session::put('error',$e->getMessage());
+	return redirect()->back();
+	}
   }
 
 

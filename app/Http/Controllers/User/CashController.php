@@ -14,6 +14,7 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderMail;
+use DB;
 
 class CashController extends Controller
 {
@@ -28,8 +29,8 @@ class CashController extends Controller
  
 	 
 
-	  // dd($charge);
-
+		DB::beginTransaction();
+		try {
      $order_id = Order::insertGetId([
      	'user_id' => Auth::id(),
      	'division_id' => $request->division_id,
@@ -89,15 +90,26 @@ class CashController extends Controller
      if (Session::has('coupon')) {
      	Session::forget('coupon');
      }
-
+	 
      Cart::destroy();
+	 DB::commit();
 
-     $notification = array(
-			'message' => 'Your Order Place Successfully',
-			'alert-type' => 'success'
-		);
+	 $notification = array(
+		'message' => 'Your Order Place Successfully',
+		'alert-type' => 'success'
+	);
 
-		return redirect()->route('dashboard')->with($notification);
+	return redirect()->route('dashboard')->with($notification);
+	
+	}catch (Exception $e) {
+		DB::rollback();
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	}
+	 
+
+   
  
 
     } // end method 

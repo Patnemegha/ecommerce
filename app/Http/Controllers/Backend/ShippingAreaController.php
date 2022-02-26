@@ -111,6 +111,7 @@ public function DistrictStore(Request $request){
 		'division_id' => $request->division_id,
 		'district_name' => $request->district_name,
 		'created_at' => Carbon::now(),
+		'updated_at' => Carbon::now(),
 
     	]);
 

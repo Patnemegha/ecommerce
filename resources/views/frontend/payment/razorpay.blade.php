@@ -62,24 +62,24 @@ Razorpat Payment Page
 		 <li>
 		 	@if(Session::has('coupon'))
 
-<strong>SubTotal: </strong> ${{ $cartTotal }} <hr>
+<strong>SubTotal: </strong> {{ $cartTotal }} <hr>
 
 <strong>Coupon Name : </strong> {{ session()->get('coupon')['coupon_name'] }}
 ( {{ session()->get('coupon')['coupon_discount'] }} % )
  <hr>
 
- <strong>Coupon Discount : </strong> ${{ session()->get('coupon')['discount_amount'] }} 
+ <strong>Coupon Discount : </strong> {{ session()->get('coupon')['discount_amount'] }} 
  <hr>
 
-  <strong>Grand Total : </strong> ${{ session()->get('coupon')['total_amount'] }} 
+  <strong>Grand Total : </strong> {{ session()->get('coupon')['total_amount'] }} 
  <hr>
 
 
 		 	@else
 
-<strong>SubTotal: </strong> ${{ $cartTotal }} <hr>
+<strong>SubTotal: </strong> {{ $cartTotal }} <hr>
 
-<strong>Grand Total : </strong> ${{ $cartTotal }} <hr>
+<strong>Grand Total : </strong> {{ $cartTotal }} <hr>
 
 
 		 	@endif 
@@ -110,7 +110,13 @@ Razorpat Payment Page
 			<div class="panel-heading">
 		    	<h4 class="unicase-checkout-title">Select Payment Method</h4>
 		    </div>
-		    
+		    @php 
+				if(Session::has('coupon')){
+				$amount= (session()->get('coupon')['total_amount'])*100;
+				}else{
+				$amount=$cartTotal*100;
+				}   
+			@endphp
         <form action="{{ route('razorpay.order') }}" method="POST" >
                               @csrf
                               <input type="hidden" name="name" value="{{ $data['shipping_name'] }}">
@@ -123,13 +129,11 @@ Razorpat Payment Page
                                 <input type="hidden" name="notes" value="{{ $data['notes'] }}"> 
                               <script src="https://checkout.razorpay.com/v1/checkout.js"
                                  data-key="{{ env('RAZORPAY_KEY') }}"
-                                 data-amount=$cartTotal 
+                                 data-amount="{{ $amount }}"
                                  data-currency="INR"
                                  data-buttontext="Pay"
                                  data-name="companyname"
                                  data-description="Rozerpay"
-                                 data-prefill.name="name"
-                                 data-prefill.email="email"
                                  data-theme.color="#F37254">
                                 </script>
                            </form>

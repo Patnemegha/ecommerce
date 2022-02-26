@@ -29,7 +29,7 @@ class CheckoutController extends Controller
 
 
     public function CheckoutStore(Request $request){
-    	
+    
     	$data = array();
     	$data['shipping_name'] = $request->shipping_name;
     	$data['shipping_email'] = $request->shipping_email;

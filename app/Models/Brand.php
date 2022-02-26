@@ -15,5 +15,6 @@ class Brand extends Model
         'brand_slug_en',
         'brand_slug_hin',
         'brand_image',
+        'updated_at',
     ];
 }

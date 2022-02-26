@@ -10,6 +10,22 @@
 		<!-- Main content -->
 		<section class="content">
  
+		@if($message = Session::get('error'))
+                     <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                        <strong>Error!</strong> {{ $message }}
+                     </div>
+                     @endif
+                     @if($message = Session::get('success'))
+                     <div class="alert alert-success alert-dismissible fade {{ Session::has('success') ? 'show' : 'in' }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                        </button>
+                        <strong>Success!</strong> {{ $message }}
+                     </div>
+                     @endif
 		 <!-- Basic Forms -->
 		  <div class="box">
 			<div class="box-header with-border">

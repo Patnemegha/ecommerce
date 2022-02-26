@@ -183,15 +183,7 @@
 
 		<div class="col-sm-6">
 			<div class="favorite-button m-t-10">
-				<a class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Wishlist" href="#">
-				    <i class="fa fa-heart"></i>
-				</a>
-				<a class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Add to Compare" href="#">
-				   <i class="fa fa-signal"></i>
-				</a>
-				<a class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="E-mail" href="#">
-				    <i class="fa fa-envelope"></i>
-				</a>
+			<button class="btn btn-primary icon" type="button" title="Wishlist" id="{{ $product->id }}" onclick="addToWishList(this.id)"> <i class="fa fa-heart"></i> </button>
 			</div>
 		</div>
 
@@ -510,11 +502,7 @@
 							</a>
 						</li>
 
-						<li class="lnk">
-							<a class="add-to-cart" href="detail.html" title="Compare">
-							    <i class="fa fa-signal"></i>
-							</a>
-						</li>
+					
 					</ul>
 				</div><!-- /.action -->
 			</div><!-- /.cart -->

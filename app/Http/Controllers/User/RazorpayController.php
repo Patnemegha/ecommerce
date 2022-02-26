@@ -9,6 +9,7 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Auth;
 use Carbon\Carbon; 
 
@@ -20,7 +21,7 @@ use Exception;
 class RazorpayController extends Controller
 {
     public function RazorpayOrder(Request $request){    
-     
+    
         if (Session::has('coupon')) {
             $total_amount = Session::get('coupon')['total_amount'];
         }else{
@@ -33,6 +34,7 @@ class RazorpayController extends Controller
         $payment = $api->payment->fetch($input['razorpay_payment_id']);
 
         if(count($input)  && !empty($input['razorpay_payment_id'])) {
+			DB::beginTransaction();
             try {
                 $response = $api->payment->fetch($input['razorpay_payment_id'])->capture(array('amount'=>$payment['amount'])); 
                 $order_id = Order::insertGetId([
@@ -41,19 +43,17 @@ class RazorpayController extends Controller
                          	'district_id' => $request->district_id,
                          	'state_id' => $request->state_id,
                          	'name' => $request->name,
-                         	'email' => $payment->email,
-                         	'phone' => $payment->phone,
+                         	'email' => $request->email,
+                         	'phone' => $request->phone,
                          	'post_code' => $request->post_code,
                          	'notes' => $request->notes,
-                    
-                         	'payment_type' => 'Stripe',
-                         	'payment_method' => $payment->method,
-                         	'payment_type' => $payment->payment_method,
+                         	'payment_method' => $payment->description,
+                         	'payment_type' => $payment->description,
                          	'transaction_id' => $input['razorpay_payment_id'],
+							'razorpay_payment_id' => $input['razorpay_payment_id'],
                          	'currency' => $payment->currency,
-                         	// 'amount' => $total_amount,
-                            'amount'=> $payment['amount'],
-                         	'order_number' => $payment->metadata->order_id,
+                            'amount'=> $total_amount,
+                         	'order_number' => $payment->id,
                     
                          	'invoice_no' => 'EOS'.mt_rand(10000000,99999999),
                          	'order_date' => Carbon::now()->format('d F Y'),
@@ -66,6 +66,7 @@ class RazorpayController extends Controller
                     
                          // Start Send Email 
                          $invoice = Order::findOrFail($order_id);
+						
                          	$data = [
                          		'invoice_no' => $invoice->invoice_no,
                          		'amount' => $total_amount,
@@ -98,7 +99,7 @@ class RazorpayController extends Controller
                          }
                     
                          Cart::destroy();
-                    
+						 DB::commit();
                          $notification = array(
                     			'message' => 'Your Order Place Successfully',
                     			'alert-type' => 'success'
@@ -107,6 +108,7 @@ class RazorpayController extends Controller
                     		return redirect()->route('dashboard')->with($notification);
           
             } catch (Exception $e) {
+				DB::rollback();
                 return  $e->getMessage();
                 Session::put('error',$e->getMessage());
                 return redirect()->back();
@@ -116,108 +118,6 @@ class RazorpayController extends Controller
         Session::put('success', 'Payment successful');
         return redirect()->back();
     }
-
-        // end
-// dd($request);
-//     	if (Session::has('coupon')) {
-//     		$total_amount = Session::get('coupon')['total_amount'];
-//     	}else{
-//     		$total_amount = round(Cart::total());
-//     	}
- 
-// 	\Stripe\Stripe::setApiKey('sk_test_51IUTWzALc6pn5BvMjaRW9STAvY4pLiq1dNViHoh5KtqJc9Bx7d4WKlCcEdHOJdg3gCcC2F19cDxUmCBJekGSZXte00RN2Fc4vm');
-
-	 
-// 	$token = $_POST['stripeToken'];
-// 	$charge = \Stripe\Charge::create([
-// 	  'amount' => $total_amount*100,
-// 	  'currency' => 'usd',
-// 	  'description' => 'Easy Online Store',
-// 	  'source' => $token,
-// 	  'metadata' => ['order_id' => uniqid()],
-// 	]);
-
-// 	  // dd($charge);
-
-//      $order_id = Order::insertGetId([
-//      	'user_id' => Auth::id(),
-//      	'division_id' => $request->division_id,
-//      	'district_id' => $request->district_id,
-//      	'state_id' => $request->state_id,
-//      	'name' => $request->name,
-//      	'email' => $request->email,
-//      	'phone' => $request->phone,
-//      	'post_code' => $request->post_code,
-//      	'notes' => $request->notes,
-
-//      	'payment_type' => 'Stripe',
-//      	'payment_method' => 'Stripe',
-//      	'payment_type' => $charge->payment_method,
-//      	'transaction_id' => $charge->balance_transaction,
-//      	'currency' => $charge->currency,
-//      	'amount' => $total_amount,
-//      	'order_number' => $charge->metadata->order_id,
-
-//      	'invoice_no' => 'EOS'.mt_rand(10000000,99999999),
-//      	'order_date' => Carbon::now()->format('d F Y'),
-//      	'order_month' => Carbon::now()->format('F'),
-//      	'order_year' => Carbon::now()->format('Y'),
-//      	'status' => 'Pending',
-//      	'created_at' => Carbon::now(),	 
-
-//      ]);
-
-//      // Start Send Email 
-//      $invoice = Order::findOrFail($order_id);
-//      	$data = [
-//      		'invoice_no' => $invoice->invoice_no,
-//      		'amount' => $total_amount,
-//      		'name' => $invoice->name,
-//      	    'email' => $invoice->email,
-//      	];
-
-//      	Mail::to($request->email)->send(new OrderMail($data));
-
-//      // End Send Email 
-
-
-//      $carts = Cart::content();
-//      foreach ($carts as $cart) {
-//      	OrderItem::insert([
-//      		'order_id' => $order_id, 
-//      		'product_id' => $cart->id,
-//      		'color' => $cart->options->color,
-//      		'size' => $cart->options->size,
-//      		'qty' => $cart->qty,
-//      		'price' => $cart->price,
-//      		'created_at' => Carbon::now(),
-
-//      	]);
-//      }
-
-
-//      if (Session::has('coupon')) {
-//      	Session::forget('coupon');
-//      }
-
-//      Cart::destroy();
-
-//      $notification = array(
-// 			'message' => 'Your Order Place Successfully',
-// 			'alert-type' => 'success'
-// 		);
-
-// 		return redirect()->route('dashboard')->with($notification);
- 
-
-//     } // end method 
-
-
-
-
- 
-
-
 
 }
  
