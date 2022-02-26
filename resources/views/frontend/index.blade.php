@@ -7,6 +7,7 @@ Home Easy Online Shop
 
 
 <div class="body-content outer-top-xs" id="top-banner-and-menu">
+  <h1 class="text-center">Welcome</h1>
   <div class="container">
     <div class="row"> 
       <!-- ============================================== SIDEBAR ============================================== -->
