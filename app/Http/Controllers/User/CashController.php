@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 use Auth;
 use Carbon\Carbon; 
@@ -15,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderMail;
 use DB;
+use Exception;
 
 class CashController extends Controller
 {
@@ -67,7 +69,6 @@ class CashController extends Controller
      	    'email' => $invoice->email,
      	];
 
-     	Mail::to($request->email)->send(new OrderMail($data));
 
      // End Send Email 
 
@@ -85,14 +86,29 @@ class CashController extends Controller
 
      	]);
      }
-
-
-     if (Session::has('coupon')) {
+	 foreach ($carts as $cart) {
+		//get product old quantity
+		$old_product_qty = DB::table('products')->where('id','=',$cart->id)->select('product_qty')->first();
+	
+		$remaining_product_quanty=($old_product_qty->product_qty - $cart->qty);
+		
+		//update product table
+		$product = Product::find($cart->id);
+		$product->product_qty = $remaining_product_quanty;
+		$product->updated_at = Carbon::now();
+		$product->update();
+		
+ }
+ 
+      if (Session::has('coupon')) {
      	Session::forget('coupon');
      }
 	 
      Cart::destroy();
 	 DB::commit();
+	 Mail::to($request->email)->send(new OrderMail($data));
+
+	 
 
 	 $notification = array(
 		'message' => 'Your Order Place Successfully',

@@ -48,8 +48,8 @@ $hot_deals = App\Models\Product::where('hot_deals',1)->where('discount_price','!
                 <!-- /.hot-deal-wrapper -->
                 
   <div class="product-info text-left m-t-20">
-    <h3 class="name"><a href="detail.html">
-      @if(session()->get('language') == 'hindi') {{ $product->product_name_hin }} @else {{ $product->product_name_en }} @endif</a></h3>
+    <h3 class="name">
+      @if(session()->get('language') == 'hindi') {{ $product->product_name_hin }} @else {{ $product->product_name_en }} @endif</h3>
     <div class="rating rateit-small"></div>
 
      @if ($product->discount_price == NULL)
@@ -67,8 +67,8 @@ $hot_deals = App\Models\Product::where('hot_deals',1)->where('discount_price','!
                 <div class="cart clearfix animate-effect">
                   <div class="action">
                     <div class="add-cart-button btn-group">
-                      <button class="btn btn-primary icon" data-toggle="dropdown" type="button"> <i class="fa fa-shopping-cart"></i> </button>
-                      <button class="btn btn-primary cart-btn" type="button">Add to cart</button>
+                     				<button type="submit" onclick="addToCart()" class="btn btn-primary"><i class="fa fa-shopping-cart inner-right-vs"></i> ADD TO CART</button>
+
                     </div>
                   </div>
                   <!-- /.action --> 

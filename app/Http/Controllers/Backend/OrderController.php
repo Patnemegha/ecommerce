@@ -12,7 +12,7 @@ use Auth;
 use Carbon\Carbon;
 use PDF;
 use DB;
- 
+use Exception;
  
 
 class OrderController extends Controller
@@ -115,8 +115,25 @@ class OrderController extends Controller
 
 	public function ReturnPendingToConfirm($order_id){
    
+   //get order quantity 
+   $quanty = DB::table('order_items')->where('order_id','=',$order_id)->select('qty','product_id')->first();
+
+   //get old product quantity
+   $old_product_qty = DB::table('products')->where('id','=',$quanty->product_id)->select('product_qty')->first();
+
+   //update product
+   $total_product_quanty=($old_product_qty->product_qty + $quanty->qty);
+		
+   DB::beginTransaction();
+		try {
+			//update product table
+			$product = Product::find($quanty->product_id);
+			$product->product_qty = $total_product_quanty;
+			$product->updated_at = Carbon::now();
+			$product->update();
+
 		Order::findOrFail($order_id)->update(['return_order' => 2]);
-  
+		DB::commit();
 		$notification = array(
 			  'message' => 'Order Confirm Successfully',
 			  'alert-type' => 'success'
@@ -124,7 +141,12 @@ class OrderController extends Controller
   
 		  return redirect()->back()->with($notification);
   
-  
+		}catch (Exception $e) {
+			DB::rollback();
+			return  $e->getMessage();
+			Session::put('error',$e->getMessage());
+			return redirect()->back();
+		}
 	  } // end method
 	
 

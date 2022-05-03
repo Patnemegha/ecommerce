@@ -8,12 +8,17 @@ use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
+
 use Illuminate\Support\Facades\Session;
 use Auth;
 use Carbon\Carbon; 
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderMail;
+use DB;
+use Exception;
+
 
 class StripeController extends Controller
 {
@@ -28,7 +33,8 @@ class StripeController extends Controller
  
 	\Stripe\Stripe::setApiKey('sk_test_51IUTWzALc6pn5BvMjaRW9STAvY4pLiq1dNViHoh5KtqJc9Bx7d4WKlCcEdHOJdg3gCcC2F19cDxUmCBJekGSZXte00RN2Fc4vm');
 
-	 
+	DB::beginTransaction();
+	 try{
 	$token = $_POST['stripeToken'];
 	$charge = \Stripe\Charge::create([
 	  'amount' => $total_amount*100,
@@ -37,8 +43,6 @@ class StripeController extends Controller
 	  'source' => $token,
 	  'metadata' => ['order_id' => uniqid()],
 	]);
-
-	  // dd($charge);
 
      $order_id = Order::insertGetId([
      	'user_id' => Auth::id(),
@@ -77,8 +81,7 @@ class StripeController extends Controller
      	    'email' => $invoice->email,
      	];
 
-     	Mail::to($request->email)->send(new OrderMail($data));
-
+     	
      // End Send Email 
 
 
@@ -96,12 +99,27 @@ class StripeController extends Controller
      	]);
      }
 
+	 foreach ($carts as $cart) {
+		//get product old quantity
+		$old_product_qty = DB::table('products')->where('id','=',$cart->id)->select('product_qty')->first();
+	
+		$remaining_product_quanty=($old_product_qty->product_qty - $cart->qty);
+		
+		//update product table
+		$product = Product::find($cart->id);
+		$product->product_qty = $remaining_product_quanty;
+		$product->updated_at = Carbon::now();
+		$product->update();
+		
+ }
 
+	 DB::commit();
      if (Session::has('coupon')) {
      	Session::forget('coupon');
      }
 
      Cart::destroy();
+	 Mail::to($request->email)->send(new OrderMail($data));
 
      $notification = array(
 			'message' => 'Your Order Place Successfully',
@@ -109,7 +127,13 @@ class StripeController extends Controller
 		);
 
 		return redirect()->route('dashboard')->with($notification);
- 
+	}
+	catch (Exception $e) {
+		DB::rollback();
+		return  $e->getMessage();
+		Session::put('error',$e->getMessage());
+		return redirect()->back();
+	}
 
     } // end method 
 

@@ -154,7 +154,7 @@
 									</div>
 									<div class="col-sm-9">
 										<div class="stock-box">
-											<span class="value">In Stock</span>
+											<span class="value">In Stock </span>
 										</div>	
 									</div>
 								</div><!-- /.row -->	
@@ -251,20 +251,9 @@
 		<div class="row">
 			
 			<div class="col-sm-2">
-				<span class="label">Qty :</span>
+				<span class="label">Qty : <b>{{ $product->product_qty }}</b></span>
 			</div>
 			
-			<div class="col-sm-2">
-				<div class="cart-quantity">
-					<div class="quant-input">
-		                <div class="arrows">
-		                  <div class="arrow plus gradient"><span class="ir"><i class="icon fa fa-sort-asc"></i></span></div>
-		                  <div class="arrow minus gradient"><span class="ir"><i class="icon fa fa-sort-desc"></i></span></div>
-		                </div>
-		                <input type="text" id="qty" value="1" min="1">
-	              </div>
-	            </div>
-			</div>
 
 			<input type="hidden" id="product_id" value="{{ $product->id }}" min="1">
 
@@ -488,19 +477,13 @@
 					<div class="cart clearfix animate-effect">
 				<div class="action">
 					<ul class="list-unstyled">
+						
 						<li class="add-cart-button btn-group">
-							<button class="btn btn-primary icon" data-toggle="dropdown" type="button">
-								<i class="fa fa-shopping-cart"></i>													
-							</button>
+						<button class="btn btn-primary icon" type="button" title="Add Cart" data-toggle="modal" data-target="#exampleModal" id="{{ $product->id }}" onclick="productView(this.id)"> <i class="fa fa-shopping-cart"></i> </button>
+
 							<button class="btn btn-primary cart-btn" type="button">Add to cart</button>
-													
 						</li>
-	                   
-		                <li class="lnk wishlist">
-							<a class="add-to-cart" href="detail.html" title="Wishlist">
-								 <i class="icon fa fa-heart"></i>
-							</a>
-						</li>
+						<button class="btn btn-primary icon" type="button" title="Wishlist" id="{{ $product->id }}" onclick="addToWishList(this.id)"> <i class="fa fa-heart"></i> </button>
 
 					
 					</ul>
